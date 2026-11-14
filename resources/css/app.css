@@ -1,0 +1,165 @@
+@import "tailwindcss";
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/* ── Brand Tokens ─────────────────────────────────────────── */
+@theme {
+    /* PENDING CLIENT CONFIRMATION - extracted from logo */
+    --font-sans:
+        "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji";
+
+    --color-navy: #1b2a4a;
+    --color-teal: #2aafa0;
+    --color-teal-dark: #1f8c80;
+    --color-white: #ffffff;
+
+    /* Scroll offset so sticky header doesn't cover anchors */
+    --scroll-mt-nav: 72px;
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Offset anchor targets so the sticky header never obscures them */
+    [id] {
+        scroll-margin-top: 72px;
+    }
+
+    /* The hero (#home) sits directly below the sticky header - no offset needed */
+    #home {
+        scroll-margin-top: 0;
+    }
+
+    /* Respect user's reduced-motion preference */
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+}
+
+/* ── Components ───────────────────────────────────────────── */
+@layer components {
+    /* Reusable form input style */
+    .form-input {
+        @apply block w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-navy placeholder-slate-400 transition-colors duration-150;
+        @apply focus:outline-none focus:ring-2 focus:ring-teal focus:border-teal;
+    }
+
+    select.form-input {
+        @apply appearance-none bg-no-repeat;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center;
+        background-size: 1.25em;
+        padding-right: 2.5rem;
+    }
+
+    /* ── Entrance animations ───────────────────────────────── */
+
+    /* Elements start hidden; JS adds .is-visible when they enter viewport */
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+            opacity 0.6s ease-out,
+            transform 0.6s ease-out;
+    }
+
+    .animate-on-scroll.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Staggered children - each child gets a longer delay than the last */
+    .stagger-children > *:nth-child(1) {
+        transition-delay: 0ms;
+    }
+    .stagger-children > *:nth-child(2) {
+        transition-delay: 80ms;
+    }
+    .stagger-children > *:nth-child(3) {
+        transition-delay: 160ms;
+    }
+    .stagger-children > *:nth-child(4) {
+        transition-delay: 240ms;
+    }
+    .stagger-children > *:nth-child(5) {
+        transition-delay: 320ms;
+    }
+    .stagger-children > *:nth-child(6) {
+        transition-delay: 400ms;
+    }
+
+    /* Fade-in-up used on hero text (triggered immediately on page load) */
+    .hero-animate {
+        opacity: 0;
+        transform: translateY(24px);
+        animation: fadeUp 0.7s ease-out forwards;
+    }
+
+    .hero-animate:nth-child(1) {
+        animation-delay: 0.05s;
+    }
+    .hero-animate:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    .hero-animate:nth-child(3) {
+        animation-delay: 0.35s;
+    }
+    .hero-animate:nth-child(4) {
+        animation-delay: 0.5s;
+    }
+    .hero-animate:nth-child(5) {
+        animation-delay: 0.65s;
+    }
+}
+
+/* ── Keyframes ────────────────────────────────────────────── */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* ── Utilities ────────────────────────────────────────────── */
+@layer utilities {
+    /* Hide Alpine.js-managed elements before JS initialises */
+    [x-cloak] {
+        display: none !important;
+    }
+}
